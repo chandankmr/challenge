@@ -51,6 +51,16 @@ public class AccountsControllerTest {
     assertThat(account.getAccountId()).isEqualTo("Id-123");
     assertThat(account.getBalance()).isEqualByComparingTo("1000");
   }
+  
+  @Test
+  public void createAnotherAccount() throws Exception {
+    this.mockMvc.perform(post("/v1/accounts").contentType(MediaType.APPLICATION_JSON)
+      .content("{\"accountId\":\"Id-456\",\"balance\":1000}")).andExpect(status().isCreated());
+
+    Account account = accountsService.getAccount("Id-456");
+    assertThat(account.getAccountId()).isEqualTo("Id-456");
+    assertThat(account.getBalance()).isEqualByComparingTo("1000");
+  }
 
   @Test
   public void createDuplicateAccount() throws Exception {
@@ -100,5 +110,28 @@ public class AccountsControllerTest {
       .andExpect(status().isOk())
       .andExpect(
         content().string("{\"accountId\":\"" + uniqueAccountId + "\",\"balance\":123.45}"));
+  }
+  
+  @Test
+  public void sendMoney() throws Exception {
+	  String uniqueAccountIdFrom = String.valueOf(System.currentTimeMillis());
+	  Account senderAccount = new Account(uniqueAccountIdFrom, new BigDecimal("1000")); 
+	    
+	  String uniqueAccountIdTo = String.valueOf(System.currentTimeMillis()+1);
+	  Account receiverAccount = new Account(uniqueAccountIdTo, new BigDecimal("1000"));  
+	  
+	  this.accountsService.createAccount(senderAccount);
+	  this.accountsService.createAccount(receiverAccount);
+	  
+    this.mockMvc.perform(post("/v1/accounts/pay").contentType(MediaType.APPLICATION_JSON)
+      .content("{\"accountFromId\":"+uniqueAccountIdFrom
+    		  +",\"accountToId\" :" +uniqueAccountIdTo
+              +",\"amount\":\"500\"}")).andExpect(status().isOk());
+
+   Account accountFrom = accountsService.getAccount(uniqueAccountIdFrom);
+   assertThat(accountFrom.getBalance()).isEqualByComparingTo("500");
+   
+   Account accountTo = accountsService.getAccount(uniqueAccountIdTo);
+   assertThat(accountTo.getBalance()).isEqualByComparingTo("1500");
   }
 }
