@@ -38,7 +38,7 @@ public class AccountsRepositoryInMemory implements AccountsRepository {
   @Override
   // MANDATORY: Transaction must be created before.
 //  @Transactional(propagation = Propagation.MANDATORY )
-  public void addAmount(String accountId, double amount) throws AccountTransactionException {
+  public synchronized void addAmount(String accountId, double amount) throws AccountTransactionException {
       Account account = this.getAccount(accountId);
       if (account == null) {
           throw new AccountTransactionException("Account not found " + accountId);
@@ -55,7 +55,7 @@ public class AccountsRepositoryInMemory implements AccountsRepository {
   // Do not catch AccountTransactionException in this method.
 //  @Transactional(propagation = Propagation.REQUIRES_NEW, 
 //                      rollbackFor = AccountTransactionException.class)
-  public String sendMoney(String accountFrom, String accountTo, double amount) throws AccountTransactionException {
+  public synchronized String  sendMoney(String accountFrom, String accountTo, double amount) throws AccountTransactionException {
 
       addAmount(accountTo, amount);
       addAmount(accountFrom,-amount);
