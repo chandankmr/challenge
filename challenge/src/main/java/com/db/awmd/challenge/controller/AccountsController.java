@@ -26,7 +26,7 @@ public class AccountsController {
     private AccountsService accountsService;
     
     @Autowired
-    NotificationService notificationService;
+    private NotificationService notificationService;
      
     @RequestMapping(value = "/v1/accounts/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Account> getAccount(@PathVariable("id") String id) 
@@ -54,7 +54,7 @@ public class AccountsController {
       }
     }
     
-    @RequestMapping(value = "/v1/accounts", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/v1/accounts/pay", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Double> sendMoney(@RequestBody String accountFromId,@RequestBody String accountToId,@RequestBody double amount) 
     {
     	

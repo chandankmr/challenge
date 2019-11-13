@@ -6,8 +6,8 @@ import com.db.awmd.challenge.exception.DuplicateAccountIdException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+//import org.springframework.transaction.annotation.Propagation;
+//import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 
 @Repository
@@ -37,7 +37,7 @@ public class AccountsRepositoryInMemory implements AccountsRepository {
   //new code
   @Override
   // MANDATORY: Transaction must be created before.
-  @Transactional(propagation = Propagation.MANDATORY )
+//  @Transactional(propagation = Propagation.MANDATORY )
   public void addAmount(String accountId, double amount) throws AccountTransactionException {
       Account account = this.getAccount(accountId);
       if (account == null) {
@@ -53,8 +53,8 @@ public class AccountsRepositoryInMemory implements AccountsRepository {
   }
   
   // Do not catch AccountTransactionException in this method.
-  @Transactional(propagation = Propagation.REQUIRES_NEW, 
-                      rollbackFor = AccountTransactionException.class)
+//  @Transactional(propagation = Propagation.REQUIRES_NEW, 
+//                      rollbackFor = AccountTransactionException.class)
   public String sendMoney(String accountFrom, String accountTo, double amount) throws AccountTransactionException {
 
       addAmount(accountTo, amount);
