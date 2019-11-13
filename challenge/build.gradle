@@ -6,7 +6,7 @@ plugins {
 
 group = 'com.demo'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '8'
 
 configurations {
 	compileOnly {
@@ -25,6 +25,11 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
+	
+// https://mvnrepository.com/artifact/org.junit.platform/junit-platform-launcher
+testCompile group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.5.2'
+
+
 }
 
 test {
