@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.db.awmd.challenge.domain.Account;
+import com.db.awmd.challenge.exception.AccountTransactionException;
 import com.db.awmd.challenge.exception.DuplicateAccountIdException;
 import com.db.awmd.challenge.service.AccountsService;
 
@@ -46,6 +47,22 @@ public class AccountsController {
        return new ResponseEntity<Account>(accountsService.getAccount(account.getAccountId()), HttpStatus.CREATED);
     } catch (DuplicateAccountIdException ex) {
     	return new ResponseEntity<Account>(HttpStatus.BAD_REQUEST);
+      }
+    }
+    
+    @RequestMapping(value = "/v1/accounts", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Double> sendMoney(@RequestBody String accountFromId,@RequestBody String accountToId,@RequestBody double amount) 
+    {
+    	
+    	if(StringUtils.isEmpty(accountFromId)||StringUtils.isEmpty(accountToId)||amount<0) {
+    		return new ResponseEntity<Double>(HttpStatus.BAD_REQUEST);
+    	}
+    	
+    	try {
+    	accountsService.sendMoney(accountFromId, accountToId, amount) ;    
+       return new ResponseEntity<Double>(amount, HttpStatus.OK);
+     } catch (AccountTransactionException ex) {
+    	return new ResponseEntity<Double>(HttpStatus.BAD_REQUEST);
       }
     }
     
