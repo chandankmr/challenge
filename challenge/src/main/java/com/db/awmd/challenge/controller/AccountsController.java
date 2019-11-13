@@ -18,11 +18,15 @@ import com.db.awmd.challenge.domain.Account;
 import com.db.awmd.challenge.exception.AccountTransactionException;
 import com.db.awmd.challenge.exception.DuplicateAccountIdException;
 import com.db.awmd.challenge.service.AccountsService;
+import com.db.awmd.challenge.service.NotificationService;
 
 @RestController
 public class AccountsController {
     @Autowired
     private AccountsService accountsService;
+    
+    @Autowired
+    NotificationService notificationService;
      
     @RequestMapping(value = "/v1/accounts/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Account> getAccount(@PathVariable("id") String id) 
@@ -59,7 +63,10 @@ public class AccountsController {
     	}
     	
     	try {
-    	accountsService.sendMoney(accountFromId, accountToId, amount) ;    
+    	String transactionId=accountsService.sendMoney(accountFromId, accountToId, amount) ; 
+    	
+    	notificationService.notifyAboutTransfer(accountsService.getAccount(accountFromId),transactionId);
+    	notificationService.notifyAboutTransfer(accountsService.getAccount(accountToId),transactionId);
        return new ResponseEntity<Double>(amount, HttpStatus.OK);
      } catch (AccountTransactionException ex) {
     	return new ResponseEntity<Double>(HttpStatus.BAD_REQUEST);

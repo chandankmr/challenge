@@ -14,5 +14,5 @@ public interface AccountsRepository {
   
   public void addAmount(String accountId, double amount) throws AccountTransactionException ;
   
-  public boolean sendMoney(String accountFrom, String accountTo, double amount) throws AccountTransactionException;
+  public String sendMoney(String accountFrom, String accountTo, double amount) throws AccountTransactionException;
 }

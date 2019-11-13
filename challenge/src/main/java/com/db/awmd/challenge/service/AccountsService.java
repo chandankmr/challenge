@@ -31,7 +31,7 @@ public AccountsRepository getAccountsRepository() {
 	return this.accountsRepository;
 }
 
-public boolean sendMoney(String accountFrom, String accountTo, double amount) throws AccountTransactionException {
+public String sendMoney(String accountFrom, String accountTo, double amount) throws AccountTransactionException {
 	return this.accountsRepository.sendMoney(accountFrom, accountTo,amount);
 }
 }

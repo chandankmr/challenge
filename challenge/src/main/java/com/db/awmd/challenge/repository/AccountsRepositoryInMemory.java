@@ -55,12 +55,12 @@ public class AccountsRepositoryInMemory implements AccountsRepository {
   // Do not catch AccountTransactionException in this method.
   @Transactional(propagation = Propagation.REQUIRES_NEW, 
                       rollbackFor = AccountTransactionException.class)
-  public boolean sendMoney(String accountFrom, String accountTo, double amount) throws AccountTransactionException {
+  public String sendMoney(String accountFrom, String accountTo, double amount) throws AccountTransactionException {
 
       addAmount(accountTo, amount);
       addAmount(accountFrom,-amount);
       
-      return true;
+      return String.valueOf(System.currentTimeMillis());
   }
 
   
